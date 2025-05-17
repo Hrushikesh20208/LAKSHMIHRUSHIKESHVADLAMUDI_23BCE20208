@@ -1,0 +1,49 @@
+SHOW DATABASES;
+
+CREATE DATABASE vit_AP;
+USE vit_AP;
+
+CREATE TABLE cse (
+    s_id INT,
+    s_name VARCHAR(20),
+    s_marks INT,
+    s_email VARCHAR(30)
+);
+
+ALTER TABLE cse ADD (
+    s_address VARCHAR(200),
+    s_skills VARCHAR(100)
+);
+
+ALTER TABLE cse ADD (
+    s_country VARCHAR(50) DEFAULT 'India'
+);
+
+ALTER TABLE cse DROP COLUMN s_skills;
+
+CREATE TABLE teacher (
+    t_id INT,
+    t_name VARCHAR(30),
+    t_course VARCHAR(20),
+    t_roomid INT
+);
+
+CREATE TABLE course (
+    c_id INT,
+    c_name VARCHAR(20),
+    c_credit INT,
+    c_duration INT
+);
+
+SHOW TABLES;
+
+INSERT INTO cse VALUES 
+(110, 'Manju', 58, 'Manju@gmail.com', 'Vizag', 'India'),
+(111, 'Hrushi', 97, 'Hrushi@gmail.com', 'Guntur', 'India'),
+(112, 'Anjali', 85, 'Anjali@yahoo.com', 'Vijayawada', 'India'),
+(113, 'Ravi', 76, 'ravi123@outlook.com', 'Hyderabad', 'India'),
+(114, 'Sita', 92, 'sita.92@gmail.com', 'Kurnool', 'India');
+
+UPDATE cse SET s_marks = 97 WHERE s_name = 'Hrushi';
+
+SELECT * FROM cse;
