@@ -1,0 +1,92 @@
+show databases;
+use vit_ap;
+show tables;
+select * from cse;
+select * from course;
+select * from worker;
+desc teacher;
+
+CREATE TABLE Worker (
+	WORKER_ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	FIRST_NAME CHAR(25),
+	LAST_NAME CHAR(25),
+	SALARY INT(15),
+	JOINING_DATE DATETIME,
+	DEPARTMENT CHAR(25)
+);
+INSERT INTO Worker 
+	(WORKER_ID, FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT) VALUES
+		(001, 'Monika', 'Arora', 100000, '14-02-20 09.00.00', 'HR'),
+		(002, 'Niharika', 'Verma', 80000, '14-06-11 09.00.00', 'Admin'),
+		(003, 'Vishal', 'Singhal', 300000, '14-02-20 09.00.00', 'HR'),
+		(004, 'Amitabh', 'Singh', 500000, '14-02-20 09.00.00', 'Admin'),
+		(005, 'Vivek', 'Bhati', 500000, '14-06-11 09.00.00', 'Admin'),
+		(006, 'Vipul', 'Diwan', 200000, '14-06-11 09.00.00', 'Account'),
+		(007, 'Satish', 'Kumar', 75000, '14-01-20 09.00.00', 'Account'),
+		(008, 'Geetika', 'Chauhan', 90000, '14-04-11 09.00.00', 'Admin');
+
+drop database vit;
+
+drop table teacher;
+
+alter table worker drop column joining_date ;
+
+delete from worker where department='HR';
+  
+truncate worker;
+
+drop table students;
+CREATE TABLE students (
+    id INT ,
+    name VARCHAR(100),
+    age INT,
+    course VARCHAR(50)
+);
+INSERT INTO students (id, name, age, course)
+VALUES
+    (1, 'Alice', 20, 'Computer Science'),
+    (2, 'Bob', 22, 'Electronics'),
+    (3, 'Charlie', 21, 'Mechanical'),
+    (4, 'David', 23, 'Civil Engineering'),
+    (5, 'Eva', 19, 'Information Technology'),
+    (6, 'Frank', 24, 'Electrical Engineering'),
+    (7, 'Grace', 20, 'Computer Science'),
+    (8, 'Henry', 22, 'Mechanical'),
+    (9, 'Isla', 21, 'Electronics'),
+    (10, 'Jack', 20, 'Information Technology');
+start transaction;
+savepoint s1;
+INSERT INTO students (id, name, age, course)
+VALUES
+    (11, 'Karan', 23, 'Computer Science'),
+    (12, 'Lina', 22, 'Civil Engineering'),
+    (13, 'Mohan', 21, 'Mechanical'),
+    (14, 'Nina', 20, 'Electrical Engineering');
+savepoint s2;
+select * from students;
+delete from students where age<20;
+commit;
+rollback to s1;
+
+
+select name as student_name from students;
+
+select * from students where age<=20 and course!='Computer Science';
+
+select name from students where age=21;
+
+select name from students where course='Computer Science';
+
+select * from students where course!='Computer Science';
+
+SELECT first_name,department FROM Worker WHERE SALARY > 200000 AND DEPARTMENt ='HR';
+
+SELECT * FROM Worker WHERE SALARY < 200000 AND DEPARTMENT ='HR' OR DEPARTMENT = 'Admin';
+
+select * from worker where salary < 300000 and salary > 100000 and (department='Admin' or department='Account');
+
+select * from students where course in ('Computer Science','Information Technology','Electrical Engineering');
+
+select * from students where course not in ('Computer Science','Information Technology') and age in (20,21,22);
+
+select * from worker where worker_id%2=0 and department in ("Admin","HR") order by salary desc limit 1;
