@@ -1,0 +1,46 @@
+SHOW DATABASES;
+USE vit_ap;
+SHOW TABLES;
+SELECT * FROM Department;
+SELECT * FROM Employee;
+DESC  Employee;
+CREATE TABLE Department (
+    DeptID INT,
+    DeptName VARCHAR(100)
+);
+
+ALTER TABLE Department ADD CONSTRAINT pk_dept PRIMARY KEY (DeptID);
+
+ALTER TABLE Department ADD CONSTRAINT uq_deptname UNIQUE (DeptName);
+
+CREATE TABLE Employee (
+    EmpID INT,
+    EmpName VARCHAR(100),
+    Email VARCHAR(100),
+    Salary DECIMAL(10,2),
+    DeptID INT
+);
+
+ALTER TABLE Employee ADD CONSTRAINT pk_emp PRIMARY KEY (EmpID);
+
+ALTER TABLE Employee ADD CONSTRAINT uq_email UNIQUE (Email);
+
+ALTER TABLE Employee MODIFY EmpName VARCHAR(100) NOT NULL;
+
+ALTER TABLE Employee ADD CONSTRAINT fk_emp_dept FOREIGN KEY (DeptID) REFERENCES Department(DeptID);
+
+INSERT INTO Department (DeptID, DeptName) VALUES (1, 'HR'),
+(2, 'IT'),
+(3, 'Finance');
+
+INSERT INTO Employee (EmpID, EmpName, Email, Salary, DeptID) VALUES
+(101, 'Alice', 'alice@example.com', 50000.00, 1),
+(102, 'Bob', 'bob@example.com', 60000.00, 2),
+(103, 'Charlie', 'charlie@example.com', 55000.00, 3),
+(104, 'David', 'david@example.com', 62000.00, 2),
+(105, 'Eve', 'eve@example.com', 58000.00, 1);
+
+ALTER TABLE Employee DROP FOREIGN KEY fk_emp_dept;
+
+ALTER TABLE Employee
+DROP INDEX uq_email;
