@@ -1,0 +1,54 @@
+// Connection
+
+package curd_operations;
+import java.sql.*;
+public class DBConnection {
+
+	public Connection get_connection() {
+		try{
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con=DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/vit_ap","VLH","ckHN7rqh");
+			System.out.println("connected");
+			System.out.println(con);
+		}
+		catch(Exception e){
+			System.out.println("an error occured, Sorry for inconvienince :"+e);
+		}
+		return con;
+	}
+}
+
+
+// Curd operations
+
+package curd_operations;
+import java.sql.*;
+public class CRUD_Operation {
+
+	public static void main(String[] args) {
+		CRUD_Operation objTest=new CRUD_Operation();
+		  
+		objTest.create_data("103", "manoj", 55);
+		objTest.create_data("104", "karthick", 65);
+
+	}
+	public void create_data(String sl_no,String name,int mark){
+		DBConnection obj_DB_Connection=new DBConnection();
+		Connection connection=obj_DB_Connection.get_connection();
+		PreparedStatement ps=null;
+		try {
+			String query="insert into student values (?,?,?)";
+			ps=connection.prepareStatement(query);
+			ps.setString(1, sl_no);
+			ps.setString(2, name);
+			ps.setInt(3, mark);
+			System.out.println(ps);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+}
+
