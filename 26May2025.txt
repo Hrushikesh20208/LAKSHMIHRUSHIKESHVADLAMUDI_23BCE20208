@@ -1,0 +1,163 @@
+package curd_operations;
+import java.util.*;
+import java.sql.*;
+public class CRUD_Operation {
+
+	public static void main(String[] args) {
+		CRUD_Operation objTest=new CRUD_Operation();
+		  
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter index");
+		String index = sc.nextLine();
+		System.out.println("Enter name");
+		String name = sc.nextLine();
+		System.out.println("Enter mark");
+		int marks = sc.nextInt();
+		
+		if(objTest.create_data(index,name,marks)){
+			System.out.println("Data added");
+		}else{
+			System.out.println("Error occured in adding data");
+		}
+		objTest.read_data("SELECT * FROM student");
+		objTest.read_data("SELECT * FROM student WHERE s_id>200");
+		objTest.delete_data("203");
+		objTest.update_data("201","Lakshmi Hrushikesh",100);
+		System.out.println("Top 3 students");
+		objTest.get_top_students(3);
+	    objTest.get_students_in_mark_range(50, 90);
+	    objTest.get_average_mark(); 
+		System.out.println("Done");
+
+	}
+	public boolean create_data(String sl_no,String name,int mark){
+		DBConnection obj_DB_Connection=new DBConnection();
+		Connection connection=obj_DB_Connection.get_connection();
+		PreparedStatement ps=null;
+		try {
+			String query="insert into student values (?,?,?)";
+			
+			ps=connection.prepareStatement(query);
+			
+			
+			ps.setString(1, sl_no);
+			ps.setString(2, name);
+			
+			ps.setInt(3, mark);
+			
+			ps.executeUpdate();
+			return true;
+		
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
+	public void read_data(String query){
+		DBConnection obj_DB_Connection=new DBConnection();
+		Connection connection=obj_DB_Connection.get_connection();
+		try{
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()){
+				System.out.println(rs.getString(1)+" "+rs.getString(2)+" "+rs.getInt(3));
+			}
+		}
+		catch(Exception e){
+			
+		}
+		
+	}
+	public void update_data(String s_id, String newName, int newMark){
+	    DBConnection obj_DB_Connection = new DBConnection();
+	    Connection connection = obj_DB_Connection.get_connection();
+	    PreparedStatement ps = null;
+	    try {
+	        String query = "UPDATE student SET s_name = ?, mark = ? WHERE s_id = ?";
+	        ps = connection.prepareStatement(query);
+	        ps.setString(1, newName);
+	        ps.setInt(2, newMark);
+	        ps.setString(3, s_id);
+
+	        int rowsAffected = ps.executeUpdate();
+	        if (rowsAffected > 0) {
+	            System.out.println("Record updated successfully.");
+	        } else {
+	            System.out.println("No matching record found.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    }
+	}
+
+	public void delete_data(String s_id){
+	    DBConnection obj_DB_Connection = new DBConnection();
+	    Connection connection = obj_DB_Connection.get_connection();
+	    PreparedStatement ps = null;
+	    try {
+	        String query = "DELETE FROM student WHERE s_id = ?";
+	        ps = connection.prepareStatement(query);
+	        ps.setString(1, s_id);
+
+	        int rowsAffected = ps.executeUpdate();
+	        if (rowsAffected > 0) {
+	            System.out.println("Record deleted successfully.");
+	        } else {
+	            System.out.println("No matching record found.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    }
+	}
+	public void get_top_students(int limit) {
+	    DBConnection obj_DB_Connection = new DBConnection();
+	    Connection connection = obj_DB_Connection.get_connection();
+	    try (PreparedStatement ps = connection.prepareStatement(
+	            "SELECT * FROM student ORDER BY mark DESC LIMIT ?")) {
+
+	        ps.setInt(1, limit);
+	        ResultSet rs = ps.executeQuery();
+	        System.out.println("Top " + limit + " Students:");
+	        while (rs.next()) {
+	            System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getInt(3));
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("Top students error: " + e);
+	    }
+	}
+	public void get_students_in_mark_range(int min, int max) {
+	    DBConnection obj_DB_Connection = new DBConnection();
+	    Connection connection = obj_DB_Connection.get_connection();
+	    try (PreparedStatement ps = connection.prepareStatement(
+	            "SELECT * FROM student WHERE mark BETWEEN ? AND ?")) {
+
+	        ps.setInt(1, min);
+	        ps.setInt(2, max);
+	        ResultSet rs = ps.executeQuery();
+	        System.out.println("Students with marks between " + min + " and " + max + ":");
+	        while (rs.next()) {
+	            System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getInt(3));
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("Mark range error: " + e);
+	    }
+	}
+	public void get_average_mark() {
+	    DBConnection obj_DB_Connection = new DBConnection();
+	    Connection connection = obj_DB_Connection.get_connection();
+	    try (Statement stmt = connection.createStatement()) {
+	        ResultSet rs = stmt.executeQuery("SELECT AVG(mark) FROM student");
+	        if (rs.next()) {
+	            System.out.println("Average Mark: " + rs.getDouble(1));
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Average mark error: " + e);
+	    }
+	}
+
+}
+
+
+
